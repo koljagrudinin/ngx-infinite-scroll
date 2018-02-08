@@ -1,12 +1,4 @@
-import { IScrollerProps, shouldTriggerEvents } from '../../src/services/event-trigger';
-
-const props = {
-  alwaysCallback: true,
-  container: {},
-  disabled: false,
-  down: 3,
-  up: 2
-} as IScrollerProps;
+import { shouldTriggerEvents } from '../../src/services/event-trigger';
 
 describe('EventTrigger', () => {
   [

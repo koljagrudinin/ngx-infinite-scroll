@@ -1,79 +1,78 @@
 import { IPositionStats, IScrollState, IScrollerDistance } from '../models';
 
-export function shouldFireScrollEvent(
-  container: IPositionStats,
-  distance: IScrollerDistance,
-  scrollingDown: boolean
-) {
-  let remaining: number;
-  let containerBreakpoint: number;
-  const scrolledUntilNow = container.height + container.scrolled;
-  if (scrollingDown) {
-    remaining = (container.totalToScroll - scrolledUntilNow) / container.totalToScroll;
-    containerBreakpoint = distance.down / 10;
-  } else {
-    remaining = scrolledUntilNow / container.totalToScroll;
-    containerBreakpoint = distance.up / 10;
-  }
+export class ScrollResolverService {
 
-  const shouldFireEvent: boolean = remaining <= containerBreakpoint;
-  return shouldFireEvent;
-}
+    getScrollStats(
+        lastScrollPosition: number,
+        container: IPositionStats,
+        distance: IScrollerDistance
+    ) {
+        const scrollDown = this.isScrollingDownwards(lastScrollPosition, container);
+        return {
+            fire: this.shouldFireScrollEvent(container, distance, scrollDown),
+            scrollDown
+        };
+    }
 
-export function isScrollingDownwards(
-  lastScrollPosition: number,
-  container: IPositionStats
-) {
-  return lastScrollPosition < container.scrolled;
-}
+    updateTriggeredFlag(scroll, scrollState: IScrollState, triggered: boolean, isScrollingDown: boolean) {
+        if (isScrollingDown) {
+            scrollState.triggered.down = scroll;
+        } else {
+            scrollState.triggered.up = scroll;
+        }
+    }
 
-export function getScrollStats(
-  lastScrollPosition: number,
-  container: IPositionStats,
-  distance: IScrollerDistance
-) {
-  const scrollDown = isScrollingDownwards(lastScrollPosition, container);
-  return {
-    fire: shouldFireScrollEvent(container, distance, scrollDown),
-    scrollDown
-  };
-}
+    isTriggeredScroll(totalToScroll, scrollState: IScrollState, isScrollingDown: boolean) {
+        return isScrollingDown
+            ? scrollState.triggered.down === totalToScroll
+            : scrollState.triggered.up === totalToScroll;
+    }
 
-export function updateScrollPosition(position: number, scrollState: IScrollState) {
-  return (scrollState.lastScrollPosition = position);
-}
+    updateScrollState(
+        scrollState: IScrollState, scrolledUntilNow: number, totalToScroll: number) {
+        this.updateScrollPosition(scrolledUntilNow, scrollState);
+        this.updateTotalToScroll(totalToScroll, scrollState);
+    }
 
-export function updateTotalToScroll(totalToScroll: number, scrollState: IScrollState) {
-  if (scrollState.lastTotalToScroll !== totalToScroll) {
-    scrollState.lastTotalToScroll = scrollState.totalToScroll;
-    scrollState.totalToScroll = totalToScroll;
-  }
-}
+    updateTotalToScroll(totalToScroll: number, scrollState: IScrollState) {
+        if (scrollState.lastTotalToScroll !== totalToScroll) {
+            scrollState.lastTotalToScroll = scrollState.totalToScroll;
+            scrollState.totalToScroll = totalToScroll;
+        }
+    }
 
-export function isSameTotalToScroll(scrollState: IScrollState) {
-  return scrollState.totalToScroll === scrollState.lastTotalToScroll;
-}
+    isSameTotalToScroll(scrollState: IScrollState) {
+        return scrollState.totalToScroll === scrollState.lastTotalToScroll;
+    }
 
-export function updateTriggeredFlag(scroll, scrollState: IScrollState, triggered: boolean, isScrollingDown: boolean) {
-  if (isScrollingDown) {
-    scrollState.triggered.down = scroll;
-  } else {
-    scrollState.triggered.up = scroll;
-  }
-}
+    private updateScrollPosition(position: number, scrollState: IScrollState) {
+        return (scrollState.lastScrollPosition = position);
+    }
 
-export function isTriggeredScroll(totalToScroll, scrollState: IScrollState, isScrollingDown: boolean) {
-  return isScrollingDown
-    ? scrollState.triggered.down === totalToScroll
-    : scrollState.triggered.up === totalToScroll;
-}
+    private shouldFireScrollEvent(
+        container: IPositionStats,
+        distance: IScrollerDistance,
+        scrollingDown: boolean
+    ) {
+        let remaining: number;
+        let containerBreakpoint: number;
+        const scrolledUntilNow = container.height + container.scrolled;
+        if (scrollingDown) {
+            remaining = (container.totalToScroll - scrolledUntilNow) / container.totalToScroll;
+            containerBreakpoint = distance.down / 10;
+        } else {
+            remaining = scrolledUntilNow / container.totalToScroll;
+            containerBreakpoint = distance.up / 10;
+        }
 
-export function updateScrollState(
-  scrollState: IScrollState, scrolledUntilNow: number, totalToScroll: number) {
-  updateScrollPosition(scrolledUntilNow, scrollState);
-  updateTotalToScroll(totalToScroll, scrollState);
-  // const isSameTotal = isSameTotalToScroll(scrollState);
-  // if (!isSameTotal) {
-  //   updateTriggeredFlag(scrollState, false, isScrollingDown);
-  // }
-}
+        const shouldFireEvent: boolean = remaining <= containerBreakpoint;
+        return shouldFireEvent;
+    }
+
+    private isScrollingDownwards(
+        lastScrollPosition: number,
+        container: IPositionStats
+    ) {
+        return lastScrollPosition < container.scrolled;
+    }
+};

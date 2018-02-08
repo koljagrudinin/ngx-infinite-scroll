@@ -2,7 +2,9 @@ import { ElementRef } from '@angular/core';
 
 import { ContainerRef } from '../../src/models';
 import { AxisResolver } from '../../src/services/axis-resolver';
-import { createResolver, createResolverWithContainer } from '../../src/services/position-resolver';
+import { PositionResolverService } from '../../src/services/position-resolver';
+
+const positionResolverService = new PositionResolverService();
 
 describe('Position Resolver', () => {
   let mockedElement: ElementRef;
@@ -28,7 +30,7 @@ describe('Position Resolver', () => {
 
   describe('Resolver Maker', () => {
     it('should create an instance of position resolver', () => {
-      const actual = createResolver({
+      const actual = positionResolverService.createResolver({
         axis,
         windowElement: mockDom.element,
       });
@@ -37,7 +39,7 @@ describe('Position Resolver', () => {
 
     it('should return the native element if container is not window', () => {
       mockDom.element.nativeElement = { mocked: true };
-      const resolver = createResolverWithContainer(
+      const resolver = positionResolverService.createResolverWithContainer(
         {
           axis,
           isWindow: false
