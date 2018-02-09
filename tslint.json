@@ -1,29 +1,18 @@
 {
-    "extends": "sme-configs/tslint.json",
+    "extends": "tslint-config-airbnb",
     "rules": {
-      "member-ordering": [
-        true,
-        {
-          "order": [
-            "public-static-field",
-            "protected-static-field",
-            "private-static-field",
-            "public-static-method",
-            "protected-static-method",
-            "private-static-method",
-            "public-instance-field",
-            "protected-instance-field",
-            "private-instance-field",
-            "public-constructor",
-            "protected-constructor",
-            "private-constructor",
-            "public-instance-method",
-            "protected-instance-method",
-            "private-instance-method"
-          ]
-        }
-      ],
-      "typedef": true,
-      "no-any": true
+        "indent": [
+            true,
+            "spaces",
+            4
+        ],
+        "no-any": true,
+        "typedef": true,
+        "max-line-length": [
+            true,
+            120
+        ],
+        "ter-indent": [false],
+        "trailing-comma":false
     }
-  }
+}

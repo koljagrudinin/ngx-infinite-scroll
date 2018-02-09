@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { InfiniteScrollEvent, IInfiniteScrollAction } from '../models';
 import { UtilsService } from '../services/ngx-ins-utils';
-import { ScrollRegisterService, InfiniteScrollActions } from '../services/scroll-register';
+import { ScrollRegisterService, INFINITE_SCROLL_ACTIONS } from '../services/scroll-register';
 
 @Directive({
     selector: '[infiniteScroll], [infinite-scroll], [data-infinite-scroll]'
@@ -84,10 +84,10 @@ export class InfiniteScrollDirective
 
     handleOnScroll({ type, payload }: IInfiniteScrollAction) {
         switch (type) {
-            case InfiniteScrollActions.DOWN:
+            case INFINITE_SCROLL_ACTIONS.DOWN:
                 return this.scrolled.emit(payload);
 
-            case InfiniteScrollActions.UP:
+            case INFINITE_SCROLL_ACTIONS.UP:
                 return this.scrolledUp.emit(payload);
 
             default:

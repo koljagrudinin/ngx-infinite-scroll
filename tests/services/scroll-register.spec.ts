@@ -1,14 +1,14 @@
-import { Observable } from 'rxjs/Observable';
 import {
     async,
     inject
 } from '@angular/core/testing';
-import { ScrollRegisterService, InfiniteScrollActions } from '../../src/services/scroll-register';
+import { ScrollRegisterService, INFINITE_SCROLL_ACTIONS } from '../../src/services/scroll-register';
 import { ScrollResolverService } from '../../src/services/scroll-resolver';
 import { ElementRef } from '@angular/core';
 import { PositionResolverService } from '../../src/services/position-resolver';
 import { UtilsService } from '../../src/services/ngx-ins-utils';
 import { IScrollRegisterConfig, IScrollerDistance, IPositionStats, IScrollParams } from '../../src/models';
+import { Observable } from 'rxjs/Rx';
 
 
 const scrollResolverService = new ScrollResolverService();
@@ -83,14 +83,14 @@ describe('Scroll Regsiter', () => {
                 params: {
                     scrollDown: true
                 },
-                expected: InfiniteScrollActions.DOWN
+                expected: INFINITE_SCROLL_ACTIONS.DOWN
             },
             {
                 it: 'should trigger up event when scrolling up',
                 params: {
                     scrollDown: false
                 },
-                expected: InfiniteScrollActions.UP
+                expected: INFINITE_SCROLL_ACTIONS.UP
             }
         ].forEach((spec) => {
             it(spec.it, () => {

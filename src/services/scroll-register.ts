@@ -1,16 +1,5 @@
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/sampleTime';
-
 import { ElementRef } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operator/map';
-import { of } from 'rxjs/observable/of';
-
+import { Observable } from 'rxjs/Rx';
 import { AxisResolver } from './axis-resolver';
 import { shouldTriggerEvents } from './event-trigger';
 import { UtilsService } from './ngx-ins-utils';
@@ -26,7 +15,7 @@ import {
     IScrollState
 } from 'src/models';
 
-export const InfiniteScrollActions = {
+export const INFINITE_SCROLL_ACTIONS = {
     DOWN: '[NGX_ISE] DOWN',
     UP: '[NGX_ISE] UP'
 };
@@ -66,7 +55,7 @@ export class ScrollRegisterService {
     toInfiniteScrollAction(response: IScrollParams): IInfiniteScrollAction {
         const { scrollDown, stats: { scrolled: currentScrollPosition } } = response;
         return {
-            type: scrollDown ? InfiniteScrollActions.DOWN : InfiniteScrollActions.UP,
+            type: scrollDown ? INFINITE_SCROLL_ACTIONS.DOWN : INFINITE_SCROLL_ACTIONS.UP,
             payload: {
                 currentScrollPosition
             }
@@ -99,7 +88,7 @@ export class ScrollRegisterService {
             down: config.downDistance
         };
         return this.attachScrollEvent(options)
-            .mergeMap((ev: any) => of(this.positionResolverService.calculatePoints(element, resolver)))
+            .mergeMap((ev: any) => Observable.of(this.positionResolverService.calculatePoints(element, resolver)))
             .map((positionStats: IPositionStats) =>
                 this.toInfiniteScrollParams(scrollState.lastScrollPosition, positionStats, distance))
             .do(({ stats, scrollDown }: IScrollParams) =>
