@@ -9,8 +9,8 @@ export class ScrollResolverService {
     ) {
         const scrollDown = this.isScrollingDownwards(lastScrollPosition, container);
         return {
+            scrollDown,
             fire: this.shouldFireScrollEvent(container, distance, scrollDown),
-            scrollDown
         };
     }
 
@@ -75,4 +75,4 @@ export class ScrollResolverService {
     ) {
         return lastScrollPosition < container.scrolled;
     }
-};
+}

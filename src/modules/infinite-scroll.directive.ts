@@ -28,7 +28,7 @@ export class InfiniteScrollDirective
     @Input() infiniteScrollUpDistance: number = 1.5;
     @Input() infiniteScrollThrottle: number = 300;
     @Input() infiniteScrollDisabled: boolean = false;
-    @Input() infiniteScrollContainer: any = null;
+    @Input() infiniteScrollContainer: string = null;
     @Input() scrollWindow: boolean = true;
     @Input() immediateCheck: boolean = false;
     @Input() horizontal: boolean = false;
@@ -38,9 +38,9 @@ export class InfiniteScrollDirective
     private disposeScroller: Subscription;
 
     constructor(private element: ElementRef,
-        private zone: NgZone,
-        private utilsService: UtilsService,
-        private scrollRegisterService: ScrollRegisterService) { }
+                private zone: NgZone,
+                private utilsService: UtilsService,
+                private scrollRegisterService: ScrollRegisterService) { }
 
     ngAfterViewInit() {
         if (!this.infiniteScrollDisabled) {
@@ -48,7 +48,11 @@ export class InfiniteScrollDirective
         }
     }
 
-    ngOnChanges({ infiniteScrollContainer, infiniteScrollDisabled, infiniteScrollDistance }: SimpleChanges) {
+    ngOnChanges({
+        infiniteScrollContainer,
+        infiniteScrollDisabled,
+        infiniteScrollDistance 
+    }: SimpleChanges) {
         const containerChanged = this.utilsService.inputPropChanged(infiniteScrollContainer);
         const disabledChanged = this.utilsService.inputPropChanged(infiniteScrollDisabled);
         const distanceChanged = this.utilsService.inputPropChanged(infiniteScrollDistance);
@@ -77,7 +81,8 @@ export class InfiniteScrollDirective
                     scrollWindow: this.scrollWindow,
                     throttle: this.infiniteScrollThrottle,
                     upDistance: this.infiniteScrollUpDistance
-                }).subscribe((payload: any) => this.zone.run(() => this.handleOnScroll(payload)));
+                }).subscribe((payload: IInfiniteScrollAction) =>
+                    this.zone.run(() => this.handleOnScroll(payload)));
             });
         }
     }

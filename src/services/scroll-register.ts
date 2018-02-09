@@ -32,7 +32,9 @@ export class ScrollRegisterService {
     attachScrollEvent(options: IScrollRegisterConfig): Observable<{}> {
         return Observable
             .fromEvent(options.container, 'scroll')
-            .sampleTime(options.throttle);
+            .sampleTime(options.throttle).merge(Observable
+                .fromEvent(options.container, 'touchmove')
+                .sampleTime(options.throttle));
     }
 
     toInfiniteScrollParams(
@@ -66,10 +68,16 @@ export class ScrollRegisterService {
         const { scrollContainer, scrollWindow, element, fromRoot } = config;
         const resolver = this.positionResolverService.createResolver({
             axis: new AxisResolver(!config.horizontal),
-            windowElement: this.utilsService.resolveContainerElement(scrollContainer, scrollWindow, element, fromRoot)
+            windowElement: this.utilsService.resolveContainerElement(
+                scrollContainer,
+                scrollWindow,
+                element,
+                fromRoot)
         });
-        const { totalToScroll: startWithTotal } = this.positionResolverService.calculatePoints(
-            element, resolver);
+        const {
+            totalToScroll: startWithTotal } = this.positionResolverService.calculatePoints(
+                element, resolver);
+
         const scrollState: IScrollState = {
             lastScrollPosition: 0,
             lastTotalToScroll: 0,
@@ -88,7 +96,8 @@ export class ScrollRegisterService {
             down: config.downDistance
         };
         return this.attachScrollEvent(options)
-            .mergeMap((ev: any) => Observable.of(this.positionResolverService.calculatePoints(element, resolver)))
+            .mergeMap(event =>
+                Observable.of(this.positionResolverService.calculatePoints(element, resolver)))
             .map((positionStats: IPositionStats) =>
                 this.toInfiniteScrollParams(scrollState.lastScrollPosition, positionStats, distance))
             .do(({ stats, scrollDown }: IScrollParams) =>
