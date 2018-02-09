@@ -1,9 +1,9 @@
 const sorcery = require('sorcery');
 
 var argv = require('yargs')
-  .alias('f', 'file')
-  .argv;
+    .alias('f', 'file')
+    .argv;
 
-sorcery.load(argv.file).then(function(chain) {
-  chain.write();
+sorcery.load(argv.file).then(function (chain) {
+    chain.write();
 });

@@ -1,10 +1,10 @@
 // Public classes.
 export {
-  ContainerRef,
-  InfiniteScrollEvent,
-  IPositionElements,
-  IPositionStats,
-  IResolver
+    ContainerRef,
+    InfiniteScrollEvent,
+    IPositionElements,
+    IPositionStats,
+    IResolver
 } from './models';
 
 export { InfiniteScrollDirective } from './modules/infinite-scroll.directive';
