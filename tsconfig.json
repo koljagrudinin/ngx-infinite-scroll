@@ -1,4 +1,5 @@
 {
+
     "compilerOptions": {
         "baseUrl": ".",
         "emitDecoratorMetadata": true,
@@ -19,7 +20,7 @@
         "types": [
             "jasmine",
             "node"
-        ]
+        ],
     },
     "exclude": [
         "node_modules",
